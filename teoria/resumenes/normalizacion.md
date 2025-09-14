@@ -31,21 +31,32 @@ cuando implicancia se implica a si misma o a un conjunto donde se encuentra la m
 
 cuando existe un subconjunto implicante que tambien implica al implicado se le llama parcial, total es cuando no existe subconjunto de implicantes
 
+
+## dependencia funcional completa
+
+consiste en que si saco una clave candidata la dependencia funcional no se mantiene
+
+
 ## dependencia funcional transitiva
 
 se generan cuando en una tupla hay 2 dependendencias funcionales donde el implicante de una es el implicado de la otra
 
 ## primera forma normal
 
-no puedo tener como atributo un conjunto de valores, o sea no puedo tener un atributo multivaluado en una relacion
+no puedo tener como atributo un conjunto de valores, o sea no puedo tener un atributo multivaluado en una relacion, deben ser solos valores atomicos, y no hay atrivutos compuestos
 
 ### solucion
 
 crear una tabla para guardar con una clave cada uno de los valores de ese atributo multi-valuado, en esa tabla las claves serian el atributo y la clave de la otra entidad
 
+- agregar una nueva relacion para el atributo multivaluado
+- expandir tuplas
+- si es fija la cantidad de valores maxima, se pueden agregar esa maxima cantidad de columnas
+
 ## segunda forma normal
 
 los atributos deben depender completamente de la clave primaria, las dependencias parciales generar problemas de redundancia, en otras palabras no pueden haber dependencias parciales, ninguna clave candidata deberia tener una dependencia parcial
+
 
 ### solucion
 
@@ -55,6 +66,9 @@ separar en tablas una con una clave parcial y su respectivo implicado y otra par
 
 no pueden haber dependencias transitivas, para toda dependencia funcional o bien la parte izquierda sea una clave candidata o bien la parte derecha es un atributo primo
 
+en un esquema de relacion r esta en tercera si para toda dependendecia x->y en R sucede que
+
+- x es superclave de r o Y-X son primos de R
 ### solucion
 
 hacer una relacion para cada una de las dependencias funcionales separadas evistando asi la dependendencia transitiva
