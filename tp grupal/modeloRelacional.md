@@ -1,7 +1,7 @@
 # modelo relacional
 
 
-usuarios( <span style="text-decoration: underline">id_usuario</span>, username, email, fecha_de_alta, fecha_de_nacimiento,nombre, apellido, pais, cantidad_de_ingresos)
+usuarios( <span style="text-decoration: underline">id_usuario</span>, username, email, fecha_de_alta, fecha_de_nacimiento,nombre, apellido, <span style="border-bottom: 1px dotted;">nombre_pais</span>, cantidad_de_ingresos)
 
 publicaciones(<span style="text-decoration: underline">id_publicaciones</span>, contenido, <span style="border-bottom: 1px dotted;">id_grupo</span>, cantidad_comentarios, url, <span style="border-bottom: 1px dotted;">id_usuario</span>)
 
@@ -37,3 +37,5 @@ notificacionesYUsuarios(<span style="text-decoration: underline">id_notificacion
 mensajes( <span style="text-decoration: underline"> id_mensaje</span>, estado, contenido, fecha_de_envio, <span style="border-bottom: 1px dotted;">id_emisor</span>, <span style="border-bottom: 1px dotted;">id_remitente</span>)
 
 reacciones(<span style="text-decoration: underline"> id_usuario</span>, <span style="text-decoration: underline"> id_publicacion</span>, reaccion)
+
+paises(<span style="text-decoration: underline"> nombre_pais </span>)
