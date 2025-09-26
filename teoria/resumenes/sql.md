@@ -401,3 +401,321 @@ WHERE equipo = 'San Martin';
 
 
 ```
+
+## logica trivalente
+
+existen 3 motivos para usar un null
+
+- valor desconocido
+- valor no disponible
+- valor no aplicable
+
+afeca por ejemplo en los joins ya que la condicion de junta puede no cumplirse
+
+![ejemplo logica trivalente](image-15.png)
+
+
+tambien se puede pedir especialmente las que tengan null
+
+```sql
+SELECT *
+FROM profesores
+WHERE legajo IS NULL
+
+```
+
+## consultas anidadas
+
+- podemos utlizar las clausulas ANY(equivalente a SOME) y all
+- es conveniente utilizar alias para las tablas que compartan mismo nombre de atributos
+
+ejemplo
+
+```sql
+SELECT * FROM profesores
+WHERE sueldo >= ALL(SELECT sueldo FROM profesores);
+
+```
+
+## consultas anidadas correlacionadas
+
+consultas que poseen una referencia entra la culta interna y externa
+
+ejemplo:
+
+```sql
+SELECT a.nombre, a.apellido
+FROM alumno AS a
+WHERE a.padron IN(SELECT na.padron
+                  FROM notas_alumnos AS na
+                  WHERE a.padron = na.padron
+                  AND na.materia = 'base de datos'
+                  AND na.nota_final >= 7)
+```
+
+## exist
+
+- compara si existe al menos una tupla dentro de la tabla que cumpla la condicion
+
+```SQL
+SELECT a.nombre, a.apellido
+FROM alumnos AS a
+WHERE EXISTS (SELECT *
+              FROM notas_alumnos AS na
+              WHERE a.padron = na.padron
+              AND na.materia = ‘Base de Datos’
+              AND na.nota_final >= 7);
+
+```
+
+## unique(no siempre esta implementado en algunos SGBD)
+
+indica si una consulta tiene tuplas duplicadas
+
+```sql
+SELECT a.nombre, a.apellido
+FROM alumnos AS a
+WHERE EXISTS (SELECT *
+              FROM notas_alumnos AS na
+              WHERE a.padron = na.padron
+              AND na.materia = ‘Base de Datos’
+              AND na.nota_final >= 7);
+
+
+
+```
+
+
+## joins
+
+- permite separar las condiciones de seleccion de las condiciones de junta haciendo mas clara la semantica
+
+ejemplo: buscamos docentes que dicten materias a partir del año 2002
+
+```SQL
+SELECT d.nombre, d.apellido, d.legajo, m.codigo
+FROM docentes AS d
+JOIN materias AS m
+ON d.legajo = m.docente
+WHERE m.inicio > 2002; -- año inicio de la materia.
+-- los comentarios son con --
+```
+
+### outer joins
+
+- LEFT OUTER JOIN
+- RIGHT OUTER JOIN
+- FULL OUTER JOIN
+
+la palabra OUTER es opcional
+
+de esos 3 se puede hacer un natural join siempre que los atributos coincidan en nombre en las tablas a joinear
+
+![left join](image-16.png)
+
+
+```sql
+SELECT d.nombre, d.apellido, d.legajo, m.codigo
+FROM docentes d
+LEFT OUTER JOIN materias m
+ON d.legajo = m.docente
+WHERE m.inicio > 2002; -- año inicio de la materia.
+
+```
+![right join](image-17.png)
+
+```sql
+SELECT d.nombre, d.apellido, d.legajo, m.codigo
+FROM docentes d
+RIGHT OUTER JOIN materias m
+ON d.legajo = m.docente
+WHERE m.inicio > 2002; -- año inicio de la materia.
+
+```
+
+## full outer join
+
+![full join](image-18.png)
+
+```SQL
+
+SELECT d.nombre, d.apellido, d.legajo, m.codigo
+FROM docentes d
+FULL OUTER JOIN materias m
+ON d.legajo = m.docente
+WHERE m.inicio > 2002; -- año inicio de la materia.
+
+```
+
+
+## agregaciones
+
+### count
+
+devuelve la cantidad de tuplas o valores de consulta
+
+```sql
+SELECT COUNT(*)
+FROM alumnos; -- cuenta todos los alumnos
+
+SELECT COUNT(padron)
+FROM alumnos; -- cuenta los padrones si hay nulo no lo cuenta 
+
+```
+
+### SUM, MAX, MIN, AVG
+
+suma todo, busca maximo, minimo y promedio
+
+```sql
+
+SELECT SUM(sueldo), MAX(sueldo), MIN(sueldo) AVG(sueldo)
+FROM docentes;
+
+```
+### some/any
+
+se aplica a una lista de valores booleanos, devuelve true si al menos un elemento es true
+
+
+### all
+
+devuelve true si toda la lista es true 
+
+```sql 
+SELECT *
+FROM alumnos
+WHERE promedio >= ALL (SELECT promedio FROM alumnos);
+
+```
+
+## GROUP BY y HAVING
+
+group by sirve para agrupar tuplas, (no sirve para ordenar) , having filtra los agrupamientos, los atributos agrupados deben ser proyectados
+
+```sql
+SELECT cargo, AVG(sueldo)
+FROM docentes
+GROUP BY cargo;
+
+SELECT cargo, COUNT(*)
+FROM docentes
+GROUP BY cargo;
+
+SELECT cargo, COUNT(*)
+FROM docentes
+GROUP BY cargo
+HAVING cargo <> “Ayudante 1” AND cargo <> “Ayudante 2”;
+
+SELECT cargo, COUNT(*)
+FROM docentes
+GROUP BY cargo
+HAVING cargo <> “Ayudante 1” AND cargo <> “Ayudante 2”;
+```
+
+## WITH
+
+crea una tabla temporal cion nuna condicion especifica para poder hacer mas divididas las consultas
+
+```sql
+WITH docentes_no_ayudantes (cargo)
+(SELECT cargo
+FROM docentes
+WHERE cargo <> “Ayudante 1” AND cargo <> “Ayudante 2”
+)
+SELECT cargo, count(*) FROM docentes_no_ayudantes GROUP BY cargo
+
+```
+
+
+## recursive with
+
+permite realizar consultas recursivas
+
+![ejemplo del principe arturo](image-19.png)
+
+```sql
+WITH RECURSIVE feudo AS (
+SELECT vasallo_de v FROM vasallos WHERE nombre = 'Tristan'
+UNION
+SELECT vasallo_de FROM feudo, vasallos WHERE feudo.v = vasallos.nombre
+)
+SELECT * FROM feudo;
+
+```
+
+## CASE
+
+permite mostrar valores en base a condiciones, se puede usar en consultas, actualizaciones o insersiones
+
+```SQL
+WITH RECURSIVE feudo AS (
+SELECT vasallo_de v FROM vasallos WHERE nombre = 'Tristan'
+UNION
+SELECT vasallo_de FROM feudo, vasallos WHERE feudo.v = vasallos.nombre
+)
+SELECT * FROM feudo;
+
+```
+
+## ASSERTIONS
+
+son restricciones como loscheks y es mejor usar los checks, sirven para deshabilitar, modificar o eliminar restricciones
+
+```sql
+SELECT nombre, apellido,
+CASE WHEN cargo = ‘Profesor’ THEN ‘Profesor adjunto’
+WHEN cargo = ‘JTP’ THEN ‘Jefe de Trabajos Prácticos’
+WHEN cargo = ‘Ayudante 1’ THEN ‘Ayudante de Primera’
+WHEN cargo = ‘Ayudante 2’ THEN ‘Ayudante de Segunda’
+END
+FROM docentes;
+```
+
+
+## triggers
+
+permite desatar un evento segun una condicion, tiene un evento, una condicion y una accion, condicion es opcional
+
+```sql
+CREATE ASSERTION sueldo_docente
+CHECK ( NOT EXISTS (SELECT *
+FROM docentes d
+WHERE d.sueldo < 60000) 
+```
+
+## vistas 
+
+es una tabla que deriva de otra tabla, permite dar autorizaciones segun cuanto acceso a datos se quiera brindar
+
+
+```sql
+CREATE VIEW alumnos_y_docentes(nombre, apellido, padron_o_legajo) AS
+SELECT a.nombre, a.apellido, a.padron FROM alumnos a UNION
+SELECT d.nombre, d.apellido, d.legajo FROM docentes d;
+```
+ drop_view borra
+
+
+## cambios de esquema
+
+- drop schema(borra la bd, usar con cariño)
+- drop table(borra tabla)
+- drop table tabla cascade(borra tablas asociadas)
+- alter table tabla add column columna(agraga una columna a una table)
+- alter table tabla drop column columna(borra una columna a una table)
+- alter table tabla alter column columna tipo_dato(cambia el tipo de una columna)
+
+## funciones de sql 
+
+- SUBSTRING corta una cadena ejemplo: SELECT SUBSTRING(apellido, 1, 8)
+
+- UPPER pone la cadena en mayusculas
+
+- char_lenght(va en minusculas) indica cuantos caracteres tiene una cadena
+
+- EXTRAC: permite extraer una fecha o time stamp el año, hora , etc
+
+- COALESCE: muestra el primer valor que sea distinto a null
+
+- CAST: permite convertir valores
