@@ -42,7 +42,7 @@ cuit, apellido, direccion
 
 ## relacion
 
-relacion = cabecera (atributo, dominio) +  cuerpo(atributo, valor)
+relacion = cabecera (atributo, dominio) +  cuerpo(atributo, valor), las relaciones van en plural
 
 ### cabecera
 
