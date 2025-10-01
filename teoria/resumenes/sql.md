@@ -18,7 +18,7 @@ con CREATE  creamos un esquema de bases de datos
 ```SQL
 CREATE SCHEMA aplicacion_futbol AUTHORIZATION 'juan'
 
-```
+``` 
 ## catalogo
 
 es un conjunto de esquemas de bases de datos que tenemos en el motor de bases de datos de la maquina
