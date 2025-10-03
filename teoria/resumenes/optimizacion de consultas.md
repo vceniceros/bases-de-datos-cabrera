@@ -68,4 +68,11 @@ queda tipo b1*b2
 si tengo indice esto se achica a 
  
 B1 * costo de indice de B2
+ 
+## ANALYZE
 
+actualiza el catalogo de una tabla
+
+## explain
+
+EXPLAIN consulta en tabla como ejemplo SELECT * FROM TABLA , te tira cuantas rows y eol ancho en bbits de cada una tiene la tabla, tambien tiene cuanto cuesta en seg la operacion  
