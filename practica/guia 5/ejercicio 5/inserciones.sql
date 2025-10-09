@@ -1,44 +1,47 @@
 INSERT INTO fabricantes (codigo_fabricante, razon_social) VALUES
-(101, 'TechSolutions Inc.'),
-(102, 'ElectroWorld S.A.'),
-(103, 'HomeEssentials Ltda.'),
-(104,'CookTronicos SRL. ');
+(101, 'Aceros Fuerte S.A.'),
+(102, 'Químicos del Sur Ltda.'),
+(103, 'Maderas Unidas'),
+(104, 'Distribuidora Sin Uso'); 
 
 INSERT INTO clientes (dni_cliente, nombre, apellido) VALUES
-(1234567, 'Ana', 'Gómez'),
-(9876543, 'Juan', 'Pérez'),
-(4567890, 'María', 'López'),
-(1122334, 'Carlos', 'Rodríguez'),
-(5566778, 'Sofía', 'Martínez');
+(1000001, 'Pedro', 'García'),
+(2000002, 'Laura', 'Méndez'),
+(3000003, 'Raúl', 'Castro'),
+(4000004, 'Diana', 'Rojas'),
+(5000005, 'Felipe', 'Vargas'),
+(6000006, 'Elena', 'Núñez'),
+(7000007, 'Sebastián', 'Torres'),
+(8000008, 'Isabel', 'Flores');
 
 INSERT INTO articulos (codigo_articulo, nombre, descripcion, codigo_fabricante, precio) VALUES
-(1, 'Mouse Óptico', 'Mouse ergonómico USB, 1200 DPI', 101, 15.50),
-(2, 'Teclado Mecánico', 'Teclado retroiluminado con switches azules', 101, 65.99),
-(3, 'Monitor LED 24', 'Pantalla Full HD, 75Hz', 102, 120.00),
-(4, 'Aspiradora Robot', 'Robot de limpieza automática con mapeo', 103, 299.90),
-(5, 'Cable HDMI 2m', 'Cable de alta velocidad 4K', 101, 8.75),
-(6, 'Cafetera Programable', 'Capacidad para 12 tazas, filtro permanente', 103, 45.00),
-(7, 'Disco SSD 500GB', 'Unidad de estado sólido SATA III', 102, 55.50),
-(8, 'Auriculares Bluetooth', 'Cancelación de ruido, 20 horas de batería', 101, 90.00),
-(9, 'Smart TV 50', 'Televisor inteligente 4K UHD', 102, 450.00),
-(10, 'Licuadora Portátil', 'Ideal para batidos, recargable USB', 103, 25.00),
-(11, 'Microondas', 'Caliente en 30 seg', 104, 15.00),
-(12, 'AIR Frier', 'Salud y fritura todo en 1', 104, 20.00);
+(1, 'Clavos 2 Pulgadas', 'Caja de 500 unidades', 101, 0.25),
+(2, 'Martillo Carpintero', 'Mango de fibra de vidrio', 101, 18.50),
+(3, 'Tornillos Madera (Caja)', 'Caja de 200 unidades', 101, 7.99),
+(4, 'Silicona Multiuso', 'Cartucho 300ml', 102, 4.50),
+(5, 'Pintura Blanca 1 Galón', 'Esmalte sintético', 102, 25.00),
+(6, 'Pincel No. 3', 'Cerdas naturales', 102, 1.99),
+(7, 'Tabla Pino 2x4', '3 metros de largo', 103, 12.00),
+(8, 'Cinta Métrica 5m', 'Caja de acero', 103, 5.50),
+(9, 'Lija Grano 100', 'Para madera y metal', 103, 0.80),
+(10, 'Guantes de Trabajo', 'Talla L', 104, 3.50),
+(11, 'Candado Pequeño', 'Cuerpo de bronce', 104, 6.00), 
+(12, 'Escalera Plegable 3m', 'Aluminio reforzado', 104, 45.00);
 
 
 INSERT INTO venta (fecha, dni_cliente, codigo_articulo, cantidad) VALUES
-('2025-01-10', 1234567, 1, 2), -- Ana compra Mouse y Cable HDMI
-('2025-01-10', 1234567, 5, 1),
-('2025-01-15', 9876543, 3, 1), -- Juan compra Monitor
-('2025-01-20', 4567890, 4, 1), -- María compra Aspiradora Robot
-('2025-01-25', 1122334, 2, 1), -- Carlos compra Teclado
-('2025-02-01', 5566778, 6, 1), -- Sofía compra Cafetera
-('2025-02-05', 9876543, 7, 2), -- Juan compra 2 SSDs
-('2025-02-10', 1234567, 8, 1), -- Ana compra Auriculares
-('2025-02-15', 4567890, 1, 3), -- María compra 3 Mouses
-('2025-02-20', 1122334, 10, 1), -- Carlos compra Licuadora
-('2025-03-01', 5566778, 9, 1), -- Sofía compra Smart TV
-('2025-03-05', 9876543, 2, 1), -- Juan compra Teclado
-('2025-03-10', 1234567, 3, 1), -- Ana compra Monitor
-('2025-03-15', 4567890, 5, 4), -- María compra 4 Cables HDMI
-('2025-03-20', 5566778, 7, 1); -- Sofía compra SSD
+('2025-10-01', 1000001, 1, 200),
+('2025-10-01', 2000002, 5, 1),
+('2025-10-02', 3000003, 7, 4),
+('2025-10-02', 4000004, 3, 2),
+('2025-10-02', 1000001, 4, 5),
+('2025-10-03', 5000005, 2, 1),
+('2025-10-03', 6000006, 8, 1),
+('2025-10-03', 7000007, 6, 3),
+('2025-10-03', 8000008, 9, 10),
+('2025-10-04', 2000002, 1, 100),
+('2025-10-04', 3000003, 5, 2),
+('2025-10-04', 4000004, 7, 1),
+('2025-10-04', 5000005, 3, 1),
+('2025-10-04', 1000001, 2, 1),
+('2025-10-04', 8000008, 4, 2);
