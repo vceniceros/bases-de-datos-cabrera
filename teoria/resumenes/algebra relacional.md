@@ -43,12 +43,12 @@ ejemplo
 saldra una relacion con el alumno de ese padron
 ```
 
-## proyeccion 
+## proyeccion π
 
 es unaria, devuelve los atributos elegidos de la relacion argumento, elimina las duplicadas, selecciona los atributo "L" de todas las tuplas de la relacion eliminando repetidos, entra una relacion, sale otra relacion de solo el atributo
 
 ```
-cpadron,nombre(alumnos) 
+πpadron,nombre(alumnos) 
 
 saldra otra relacion con todos los padrones y nombre
 ```
