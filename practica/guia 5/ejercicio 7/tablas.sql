@@ -46,8 +46,8 @@ CREATE TABLE combos(
 );
 
 CREATE TABLE ventas_funciones(
-    dni_cliente int,
-     dia date,
+  dni_cliente int,
+  dia date,
   hora time,
   sala varchar(50),
   nombre_pelicula varchar(100),
