@@ -55,7 +55,7 @@ crear una tabla para guardar con una clave cada uno de los valores de ese atribu
 
 ## segunda forma normal
 
-los atributos deben depender completamente de la clave primaria, las dependencias parciales generar problemas de redundancia, en otras palabras no pueden haber dependencias parciales, ninguna clave candidata deberia tener una dependencia parcial
+parte de la definicion de dependencia total, es decir para toda dependencia x -> y si saco un atributo del conjunto x la dependencia no se mantiene, las dependencias parciales generar problemas de redundancia, en otras palabras no pueden haber dependencias parciales, ninguna clave candidata deberia tener una dependencia parcial
 
 
 ### solucion
@@ -64,7 +64,7 @@ separar en tablas una con una clave parcial y su respectivo implicado y otra par
 
 ## tercera forma normal
 
-no pueden haber dependencias transitivas, para toda dependencia funcional o bien la parte izquierda sea una clave candidata o bien la parte derecha es un atributo primo
+parte de las dependencias transitivas donde existiendo un conjunto x -> y existiese otro conjunto z tal que x -> z y a su vez z -> y, no pueden haber dependencias transitivas, para toda dependencia funcional o bien la parte izquierda sea una clave candidata o bien la parte derecha es un atributo primo, en resumen debe cumplir con 2fn y ningun atributo no primo de r es transitivamente dependiente de una clave principal. o sea una dependencia funcional transitiva es cuando un atributo depende de otro atributo que no es clave candidata
 
 en un esquema de relacion r esta en tercera si para toda dependendecia x->y en R sucede que
 
@@ -79,7 +79,8 @@ pertenece solamente a una clave candidata
 
 ## tercera forma normal de boire cold 
 
-para toda dependencia funcional la parte izquierda sea una clave candidata
+
+un esquema esta en BCFN si siempre que una dependencia funcional no trivial X -> A se cumple en R entonces X es una superclave  de R, para toda dependencia funcional la parte izquierda sea una clave candidata
 
 ### solucion
 
@@ -100,3 +101,31 @@ otra tabla donde la clave candidata se vinculo que cada uno de los valores de el
 ## quinta forma normal
 
 si voy a dividir una tabla en varias tablas en todas las tablas debe existir varias tablitas se deben unir por join con un join posible por tabla
+
+## conjunto clasura
+
+es el conjunto de todos los atributos que se pueden inferir a partir de un conjunto inicial de atributos aplicando las dependencias funcionales, F+ es la clausura de F y contiene todas las dependencias funcionales que se pueden inferir a partir de F.
+
+## algoritmo para calcular la clausura de un conjunto de atributos
+
+- inicializar X+ con X
+- para cada dependencia funcional A->B en F, si A esta en X+ entonces agregar B a X+
+- repetir el paso 2 hasta que no se puedan agregar mas atributos a X+
+- retornar X+
+
+## conjunto minimo de dependencias funcionales
+
+es un conjunto equivalente a F pero con las siguientes propiedades
+
+- cada dependencia funcional en Fmin tiene un solo atributo en el lado derecho
+- para cada dependencia funcional en Fmin, no se puede eliminar ningun atributo del lado izquierdo sin cambiar el conjunto de dependencias funcionales
+- no podemos remplazar ninguna dependencia funcional en Fmin por otra dependencia funcional que se pueda inferir a partir de las demas dependencias funcionales en Fmin
+  
+
+## algoritmo para calcular un conjunto minimo de dependencias funcionales
+
+- dividir las dependencias funcionales en F de modo que cada dependencia funcional tenga un solo atributo en el lado derecho
+- para cada dependencia funcional A->B en F, verificar si algun atributo en A se puede eliminar sin cambiar el conjunto de dependencias funcionales
+- para cada dependencia funcional A->B en F, verificar si se puede eliminar sin cambiar el conjunto de dependencias funcionales
+- retornar Fmin
+
