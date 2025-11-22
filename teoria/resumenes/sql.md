@@ -618,7 +618,7 @@ HAVING cargo <> “Ayudante 1” AND cargo <> “Ayudante 2”;
 crea una tabla temporal cion nuna condicion especifica para poder hacer mas divididas las consultas
 
 ```sql
-WITH docentes_no_ayudantes (cargo)
+WITH docentes_no_ayudantes (cargo) AS 
 (SELECT cargo
 FROM docentes
 WHERE cargo <> “Ayudante 1” AND cargo <> “Ayudante 2”
