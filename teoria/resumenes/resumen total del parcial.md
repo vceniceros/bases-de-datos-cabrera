@@ -266,3 +266,267 @@ en este caso se crea una nueva relacion, se agregan las claves primarias de amba
 alumno_docente(alumno_padron, docente_dni) con ambas como claves foraneas y (alumno_padron, docente_dni) como clave primaria
 ```
 
+#### generalizacion o especializacion
+
+se crea una relacion para la entidad padre y una relacion para cada subentidad, los atributos de la entidad padre se convierten en atributos de la relacion padre, la clave primaria de la entidad padre se convierte en clave primaria de la relacion padre, los atributos de cada subentidad se convierten en atributos de la relacion hija, la clave primaria de la relacion hija es la misma que la clave primaria de la relacion padre
+
+
+![especializacion](image-39.png)
+
+```pasa a ser   
+
+electrodomestico(marca, modelo, pais, consuma) con (marca, modelo) como clave primaria
+
+heladera(marca, modelo, capacidad) con (marca, modelo) como clave primaria
+
+televisor(marca, modelo, canales) con (marca, modelo) como clave primaria
+
+lavaropas(marca, modelo, programas) con (marca, modelo) como clave primaria
+
+si es una especializacion total
+
+se agregan todos los atributos de la entidad padre a cada subentidad
+
+heladera(marca, modelo, pais, consuma, capacidad) con (marca, modelo) como clave primaria
+
+televisor(marca, modelo, pais, consuma, canales) con (marca, modelo) como clave primaria
+
+lavaropas(marca, modelo, pais, consuma, programas) con (marca, modelo) como clave primaria
+
+```
+
+#### union
+
+se crea una relacion para la entidad padre y una relacion para cada subentidad, los atributos de la entidad padre se convierten en atributos de la relacion padre, la clave primaria de la entidad padre se convierte en clave primaria de la relacion padre, los atributos de cada subentidad se convierten en atributos de la relacion hija, la clave primaria de la relacion hija es la clave primaria de la entidad hija
+
+![union](image-40.png)
+
+```pasa a ser
+
+producto(id_producto, precio)
+con id_producto como clave primaria
+
+libro(titulo, año, id_producto)
+
+con titulo como clave primaria y id_producto como clave foranea
+
+pelicula(titulo, duración, id_producto)
+
+con titulo como clave primaria y id_producto como clave foranea
+```
+
+#### ternarias con cardinalidad n;n;n
+
+se crea una nueva relacion, se agregan las claves primarias de las tres entidades como claves foraneas en la nueva relacion, la clave primaria de la nueva relacion es la combinacion de las claves primarias de las tres entidades
+
+![ternaria n;n;n](image-41.png)
+
+```pasa a ser
+
+materia_docente_universidad(codigo_materia,legajo_docente,nombre_universidad)
+
+con las tres como claves foraneas y (codigo_materia, legajo_docente, nombre_universidad) como clave primaria
+```
+
+#### ternarias con cardinalidad n;n;1
+
+a dirimir
+
+#### ternaria con cardinalidad n;1;1
+
+a dirimir
+
+## algebra relacional
+
+es un lenguaje procedural que permite manipular y consultar relaciones en una base de datos relacional, se compone de un conjunto de operaciones que toman una o mas relaciones como entrada y producen una nueva relacion como salida
+
+### seleccion (σ)
+
+devuelve todas las tuplas de una relacion que cumplen una condicion especifica
+
+```
+σ condicion (R)
+```
+### proyeccion (π)
+
+devuelve una nueva relacion que contiene solo los atributos especificados de la relacion original, eliminando las tuplas duplicadas
+
+```
+π atributos (R)
+```
+
+### union (∪)
+
+es binaria, devuelve una nueva relacion que contiene todas las tuplas que estan en al menos una de las dos relaciones de entrada, para que sea posible ambas relaciones tienen que tener misma aridad, dominios compatibles y tener coherencia semantica
+
+```
+R1 ∪ R2
+o bien
+π atributos (R1) ∪ π atributos (R2)
+```
+
+### diferencia (-)
+
+es binaria, devuelve una nueva relacion que contiene todas las tuplas que estan en la primera relacion pero no en la segunda, para que sea posible ambas relaciones tienen que tener misma aridad, dominios compatibles y tener coherencia semantica
+
+```
+R1 - R2
+o bien
+π atributos (R1) - π atributos (R2)
+```
+
+### producto cartesiano (×)
+
+es binaria, devuelve una nueva relacion que contiene todas las combinaciones posibles de tuplas de las dos relaciones de entrada
+
+```
+R1 × R2
+```
+
+### renombrar (ρ)
+
+sirve para cambiar el nombre de una relacion o de sus atributos
+
+```
+ρ nuevo_nombre (R)
+o bien
+ρ nuevo_nombre (atributo1, atributo2, ...) (R)
+``` 
+
+### interseccion (∩)
+
+es binaria, devuelve una nueva relacion que contiene todas las tuplas que estan en ambas relaciones de entrada, para que sea posible ambas relaciones tienen que tener misma aridad, dominios compatibles y tener coherencia semantica
+
+```
+R1 ∩ R2
+o bien
+π atributos (R1) ∩ π atributos (R2)
+```
+
+### join (⨝)
+
+combina dos relaciones basandose en una condicion de igualdad entre atributos comunes de ambas relaciones, devuelve una nueva relacion que contiene todas las tuplas que cumplen la condicion de join
+
+```
+R1 ⨝ condicion R2
+o bien
+R1 ⨝ R2  (si los atributos comunes tienen el mismo nombre)
+```
+### join natural (⋈)
+
+combina dos relaciones basandose en la igualdad de todos los atributos comunes entre ambas relaciones, devuelve una nueva relacion que contiene todas las tuplas que cumplen la condicion de join natural
+
+```
+
+R1 ⋈ R2
+```
+
+### division (÷)
+
+es binaria, devuelve una nueva relacion que contiene todas las tuplas de la primera relacion que estan asociadas con todas las tuplas de la segunda relacion
+
+```
+R1 ÷ R2
+
+```
+
+### asignacion (←)
+
+permite almacenar el resultado de una operacion en una nueva relacion para su uso posterior
+
+```
+R3 ← operacion
+```
+
+## dependencias funcionales
+
+una dependencia funcional es una restriccion entre dos conjuntos de atributos en una relacion, donde un conjunto de atributos determina de manera unica a otro conjunto de atributos
+
+```
+A -> B
+```
+
+significa que el valor de A determina de manera unica el valor de B
+
+### superclave bis
+
+un conjunto de atributos K es una superclave para una relacion R si para cualquier par de tuplas en R, si tienen el mismo valor para K, entonces deben tener el mismo valor para todos los atributos en R
+
+### clave candidata bis
+
+un conjunto de atributos K es una clave candidata para una relacion R si se cumplen dos condiciones:
+
+1. Unicidad: para cualquier par de tuplas en R, si tienen el mismo valor para K, entonces deben tener el mismo valor para todos los atributos en R
+
+2. Minimalidad: no existe un subconjunto propio de K que cumpla la condicion de unicidad
+
+### clausura 
+
+la clausura de un conjunto de atributos A, denotada como A+, es el conjunto de todos los atributos que pueden ser determinados funcionalmente por A utilizando un conjunto dado de dependencias funcionales F
+
+### reglas de inferencia de Armstrong
+
+1. Reflexividad: si B es un subconjunto de A, entonces A -> B
+
+2. Aumentacion: si A -> B, entonces AC -> BC para cualquier conjunto de atributos C
+
+3. Transitividad: si A -> B y B -> C, entonces A -> C
+
+### conjunto minimo de dependencias funcionales
+
+un conjunto minimo de dependencias funcionales F es un conjunto que cumple las siguientes condiciones:
+
+1. Cada dependencia funcional en F tiene una sola atributo en el lado derecho
+2. No se puede eliminar ninguna dependencia funcional de F sin cambiar el cierre de F
+3. No se puede eliminar ningun atributo del lado izquierdo de ninguna dependencia funcional en F sin cambiar el cierre de F
+4. El conjunto F es equivalente al conjunto original de dependencias funcionales
+
+como obtenerlo:
+
+1. descomponer las dependencias funcionales para que cada una tenga un solo atributo en el lado derecho
+
+2. eliminar dependencias funcionales redundantes
+
+3. eliminar atributos redundantes del lado izquierdo de las dependencias funcionales
+
+### atributos primos
+
+un atributo es primo si pertenece a alguna clave candidata de la relacion
+
+
+### dependencias funcionales triviales
+
+una dependencia funcional A -> B es trivial si B es un subconjunto de A
+
+### dependencias funcionales transitivas
+
+una dependencia funcional A -> C es transitiva si existe un conjunto de atributos B tal que A -> B y B -> C, y B no es un subconjunto de A ni de C
+
+### dependencias funcionales parciales
+
+una dependencia funcional A -> B es parcial si existe un subconjunto propio de A, digamos C, tal que C -> B
+
+### dependencias funcionales completas
+
+una dependencia funcional A -> B es completa si no es parcial, es decir, no existe un subconjunto propio de A que determine a B
+
+## normalizacion
+
+la normalizacion es el proceso de organizar los datos en una base de datos para reducir la redundancia y mejorar la integridad de los datos, se logra dividiendo una base de datos en tablas mas pequeñas y definiendo relaciones entre ellas, al normaliza buscamos preservar los datos(esto es escencial), evitar reduncacias y preservar las dependencias funcionales
+
+### primera forma normal (1FN)
+
+una relacion esta en 1FN si todos sus atributos son atomicos, es decir, no se permiten atributos multivaluado o compuestos
+
+### segunda forma normal (2FN)
+
+una relacion esta en 2FN si esta en 1FN y no tiene dependencias funcionales parciales, es decir, todos los atributos no primos deben depender completamente de la clave primaria
+
+### tercera forma normal (3FN)
+
+una relacion esta en 3FN si esta en 2FN y no tiene dependencias funcionales transitivas, es decir, todos los atributos no primos deben depender directamente de la clave primaria y no de otros atributos no primos
+
+### forma normal de Boyce-Codd (BCNF)
+
+una relacion esta en BCNF si para cada dependencia funcional A -> B, A es una superclave, es decir, no existen dependencias funcionales donde el lado izquierdo no sea una superclave
+
