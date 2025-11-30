@@ -221,3 +221,214 @@ JOIN Reproducciones r ON r.id_usuario = u.id_usuario
 JOIN Capitulos c ON c.id_capitulo = r.id_capitulo
 GROUP BY u.id_usuario
 HAVING COUNT(DISTINCT c.id_serie) >= 3;
+
+--Obtener el título de la serie cuyo promedio de minutos vistos por reproducción es el mayor.
+WITH minutos_visto_por_serie(nombre_serie, minutos_vistos) AS (
+    SELECT s.titulo, AVG(r.minutos_vistos)
+    FROM series AS s
+    JOIN Capitulos c
+on s.id_serie = c.id_serie
+    JOIN reproducciones r
+    ON r.id_capitulo = c.id_capitulo
+    GROUP BY s.titulo
+    )SELECT * FROM minutos_visto_por_serie;
+
+
+WITH minutos_visto_por_serie(nombre_serie, minutos_vistos) AS (
+    SELECT s.titulo, AVG(r.minutos_vistos)
+    FROM series AS s
+    JOIN Capitulos c
+on s.id_serie = c.id_serie
+    JOIN reproducciones r
+    ON r.id_capitulo = c.id_capitulo
+    GROUP BY s.titulo
+    )SELECT nombre_serie, minutos_vistos
+    FROM minutos_visto_por_serie
+    WHERE minutos_vistos = (SELECT MAX(minutos_vistos) FROM minutos_visto_por_serie );
+
+-- Obtener los usuarios que nunca vieron una serie estrenada antes de 2010.
+SELECT DISTINCT u.*, s.titulo
+FROM usuarios as u
+JOIN Reproducciones as r
+ON u.id_usuario = r.id_usuario
+JOIN Capitulos C on r.id_capitulo = C.id_capitulo
+LEFT JOIN series s
+ON s.id_serie = c.id_serie
+WHERE s.año_estreno > 2010;
+
+WITH series_estrenadas_pre_2010(titulo) AS(
+    SELECT s.titulo
+    FROM series as s
+    WHERE s.año_estreno <= 2010
+)SELECT DISTINCT u.*, s.titulo
+FROM usuarios as u
+JOIN Reproducciones as r
+ON u.id_usuario = r.id_usuario
+JOIN Capitulos C on r.id_capitulo = C.id_capitulo
+LEFT JOIN series s
+ON s.id_serie = c.id_serie
+WHERE s.titulo not in (select titulo FROM series_estrenadas_pre_2010);
+
+WITH series_por_usuario(id_usuario, titulo, año_estreno) AS (
+    SELECT u.id_usuario, s.titulo, s.año_estreno
+    FROM usuarios AS u
+    JOIN reproducciones AS r
+    ON r.id_usuario = u.id_usuario
+    JOIN capitulos as c
+    ON c.id_capitulo = r.id_capitulo
+    JOIN Series S
+    on c.id_serie = S.id_serie
+)SELECT u.*, su.titulo, su.año_estreno
+FROM usuarios as u
+JOIN series_por_usuario AS su
+ON u.id_usuario = su.id_usuario
+WHERE año_estreno <= 2010;
+
+SELECT u.id_usuario, u.nombre, u.apellido
+FROM Usuarios u
+WHERE u.id_usuario NOT IN (
+    SELECT r.id_usuario
+    FROM Reproducciones r
+    JOIN Capitulos c ON c.id_capitulo = r.id_capitulo
+    JOIN Series s ON s.id_serie = c.id_serie
+    WHERE s.año_estreno < 2010
+);
+
+
+CREATE SCHEMA teatro;
+SET search_path  TO teatro;
+
+
+CREATE TABLE Obras (
+    nombre_obra VARCHAR(100) PRIMARY KEY,
+    genero VARCHAR(50)
+);
+
+CREATE TABLE Salas (
+    nombre_sala VARCHAR(100) PRIMARY KEY,
+    capacidad INT NOT NULL
+);
+
+CREATE TABLE Funciones (
+    id_funcion int PRIMARY KEY,
+    nombre_obra VARCHAR(100) REFERENCES Obras(nombre_obra),
+    nombre_sala VARCHAR(100) REFERENCES Salas(nombre_sala),
+    dia DATE,
+    hora TIME
+);
+
+CREATE TABLE Entradas (
+    dni_espectador int,
+    id_funcion INT REFERENCES Funciones(id_funcion),
+    precio NUMERIC(10,2),
+    PRIMARY KEY (dni_espectador, id_funcion)
+);
+
+INSERT INTO Obras (nombre_obra, genero) VALUES
+('Hamlet', 'Drama'),
+('La Casa de Bernarda Alba', 'Drama'),
+('El Avaro', 'Comedia'),
+('Sueño de una Noche de Verano', 'Comedia');
+
+INSERT INTO Salas (nombre_sala, capacidad) VALUES
+('Sala Principal', 300),
+('Sala Azul', 150),
+('Sala Roja', 200);
+
+
+INSERT INTO Funciones (id_funcion, nombre_obra, nombre_sala, dia, hora) VALUES
+-- Hamlet (3 funciones)
+(1,'Hamlet', 'Sala Principal', '2025-05-01', '20:00'),
+(2,'Hamlet', 'Sala Azul',      '2025-05-03', '21:00'),
+(3,'Hamlet', 'Sala Roja',      '2025-05-05', '19:00'),
+
+-- Bernarda Alba (2 funciones)
+(4,'La Casa de Bernarda Alba', 'Sala Azul', '2025-04-15', '20:00'),
+(5,'La Casa de Bernarda Alba', 'Sala Azul', '2025-04-20', '20:00'),
+
+-- El Avaro (3 funciones)
+(6,'El Avaro', 'Sala Roja', '2025-03-10', '20:00'),
+(7,'El Avaro', 'Sala Roja', '2025-03-12', '20:00'),
+(8,'El Avaro', 'Sala Azul', '2025-03-15', '21:00'),
+
+-- Sueño (1 función)
+(9,'Sueño de una Noche de Verano', 'Sala Principal', '2025-06-01', '20:00');
+
+INSERT INTO Entradas (dni_espectador, id_funcion, precio)
+SELECT 'H'||generate_series(1,260), 1, 500;
+
+INSERT INTO Entradas (dni_espectador, id_funcion, precio)
+SELECT 'H'||generate_series(261,400), 2, 500;
+
+INSERT INTO Entradas (dni_espectador, id_funcion, precio)
+SELECT 'H'||generate_series(401,580), 3, 500;
+
+INSERT INTO Entradas (dni_espectador, id_funcion, precio)
+SELECT 'N4_' || generate_series(1,75), 4, 500;
+
+INSERT INTO Entradas (dni_espectador, id_funcion, precio)
+SELECT 'N5_' || generate_series(1,50), 5, 500;
+
+-- Realizar una consulta SQL que obtenga las obras que tuvieron en todas sus funciones una
+-- asistencia mayor al 80% respecto a la capacidad de las salas donde tuvieron funciones.
+
+SELECT f.id_funcion, ((COUNT(e.id_funcion) * 1.0 / s.capacidad) * 100) AS porcentaje_asistencia
+FROM Funciones as f
+JOIN Entradas as e
+on f.id_funcion = e.id_funcion
+join salas as s
+ON s.nombre_sala = f.nombre_sala
+GROUP BY f.id_funcion, s.nombre_sala;
+
+WITH porcentaje_de_asistencia(id_funcion, porcentaje) AS (
+    SELECT f.id_funcion, ((COUNT(e.id_funcion) * 1.0 / s.capacidad) * 100) AS porcentaje_asistencia
+FROM Funciones as f
+JOIN Entradas as e
+on f.id_funcion = e.id_funcion
+join salas as s
+ON s.nombre_sala = f.nombre_sala
+GROUP BY f.id_funcion, s.nombre_sala
+)SELECT o.*
+ FROM obras AS o
+JOIN Funciones as f
+on o.nombre_obra = f.nombre_obra
+JOIN porcentaje_de_asistencia as p
+ON p.id_funcion = f.id_funcion
+WHERE p.porcentaje >= 80.0;
+
+WITH porcentaje_de_asistencia(id_funcion, porcentaje) AS (
+    SELECT f.id_funcion, ((COUNT(e.id_funcion) * 1.0 / s.capacidad) * 100) AS porcentaje_asistencia
+FROM Funciones as f
+JOIN Entradas as e
+on f.id_funcion = e.id_funcion
+join salas as s
+ON s.nombre_sala = f.nombre_sala
+GROUP BY f.id_funcion, s.nombre_sala
+)SELECT o.nombre_obra
+ FROM obras AS o
+WHERE o.nombre_obra in (
+    SELECT o2.nombre_obra
+    FROM obras as o2
+    JOIN Funciones as f
+on o2.nombre_obra = f.nombre_obra
+JOIN porcentaje_de_asistencia as p
+ON p.id_funcion = f.id_funcion
+    where porcentaje >= 80
+    );
+
+WITH porcentaje_por_funcion AS (
+    SELECT
+        f.id_funcion,
+        f.nombre_obra,
+        COUNT(e.id_funcion) * 1.0 / s.capacidad AS porcentaje
+    FROM Funciones f
+    JOIN Salas s ON s.nombre_sala = f.nombre_sala
+    LEFT JOIN Entradas e ON e.id_funcion = f.id_funcion
+    GROUP BY
+        f.id_funcion,
+        f.nombre_obra,
+        s.capacidad
+)SELECT nombre_obra
+FROM porcentaje_por_funcion
+GROUP BY nombre_obra
+HAVING MIN(porcentaje) > 0.8;
